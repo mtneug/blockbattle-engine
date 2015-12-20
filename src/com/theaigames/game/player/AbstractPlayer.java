@@ -19,7 +19,7 @@ package com.theaigames.game.player;
 
 import java.io.IOException;
 
-import com.theaigames.engine.io.IOPlayer;
+import com.theaigames.engine.io.IOPlayerable;
 
 /**
  * AbstractPlayer class
@@ -36,12 +36,12 @@ import com.theaigames.engine.io.IOPlayer;
 public abstract class AbstractPlayer {
 	
 	private String name;
-	private IOPlayer bot;
+	private IOPlayerable bot;
 	private long timeBank;
 	private long maxTimeBank;
 	private long timePerMove;
 	
-	public AbstractPlayer(String name, IOPlayer bot, long maxTimeBank, long timePerMove) {
+	public AbstractPlayer(String name, IOPlayerable bot, long maxTimeBank, long timePerMove) {
 		this.name = name;
 		this.bot = bot;
 		this.timeBank = maxTimeBank;
@@ -66,7 +66,7 @@ public abstract class AbstractPlayer {
 	/**
 	 * @return : The Bot object of this Player
 	 */
-	public IOPlayer getBot() {
+	public IOPlayerable getBot() {
 		return bot;
 	}
 

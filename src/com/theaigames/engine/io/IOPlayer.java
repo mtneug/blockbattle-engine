@@ -27,8 +27,8 @@ import java.io.OutputStreamWriter;
  * 
  * @author Jackie Xu <jackie@starapple.nl>, Jim van Eeden <jim@starapple.nl>
  */
-public class IOPlayer implements Runnable {
-    
+public class IOPlayer implements IOPlayerable {
+
     private Process process;
     private OutputStreamWriter inputStream;
     private InputStreamGobbler outputGobbler;
@@ -192,5 +192,9 @@ public class IOPlayer implements Runnable {
     public void run() {
         this.outputGobbler.start();
         this.errorGobbler.start();
+    }
+
+    public void setResponse(String response) {
+      this.response = response;
     }
 }

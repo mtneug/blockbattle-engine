@@ -22,7 +22,7 @@ import java.util.List;
 
 import com.theaigames.blockbattle.field.Field;
 import com.theaigames.blockbattle.player.Player;
-import com.theaigames.engine.io.IOPlayer;
+import com.theaigames.engine.io.IOPlayerable;
 import com.theaigames.game.AbstractGame;
 import com.theaigames.game.player.AbstractPlayer;
 
@@ -36,7 +36,7 @@ public class Blockbattle extends AbstractGame {
 	private List<Player> players;
 
 	@Override
-	public void setupGame(ArrayList<IOPlayer> ioPlayers) throws Exception {
+	public void setupGame(ArrayList<IOPlayerable> ioPlayers) throws Exception {
 		
 		System.out.println("Setting up game...");
 		

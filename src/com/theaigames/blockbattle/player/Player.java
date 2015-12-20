@@ -24,7 +24,7 @@ import com.theaigames.blockbattle.field.Field;
 import com.theaigames.blockbattle.field.Shape;
 import com.theaigames.blockbattle.field.ShapeType;
 import com.theaigames.blockbattle.moves.Move;
-import com.theaigames.engine.io.IOPlayer;
+import com.theaigames.engine.io.IOPlayerable;
 import com.theaigames.game.player.AbstractPlayer;
 
 public class Player extends AbstractPlayer {
@@ -42,7 +42,7 @@ public class Player extends AbstractPlayer {
 	private HashMap<Integer, ArrayList<PlayerState>> playedGame;
 	private Player opponent;
 
-	public Player(String name, IOPlayer bot, long maxTimeBank, long timePerMove, Field field) {
+	public Player(String name, IOPlayerable bot, long maxTimeBank, long timePerMove, Field field) {
 		super(name, bot, maxTimeBank, timePerMove);
 		this.field = field;
 		this.rowPoints = 0;

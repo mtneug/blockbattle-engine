@@ -19,6 +19,8 @@
 package com.theaigames.engine;
 
 import com.theaigames.engine.io.IOPlayer;
+import com.theaigames.engine.io.IOPlayerable;
+
 import java.io.IOException;
 import java.util.ArrayList;
 /**
@@ -35,12 +37,12 @@ public class Engine {
     
     private boolean isRunning; // Boolean representing current engine running state
     private Logic logic; // Class implementing Logic interface; handles all data
-    private ArrayList<IOPlayer> players; // ArrayList containing player handlers
+    private ArrayList<IOPlayerable> players; // ArrayList containing player handlers
     
     // Engine constructor 
     public Engine() {
         this.isRunning = false;
-        this.players = new ArrayList<IOPlayer>();
+        this.players = new ArrayList<IOPlayerable>();
     }
     
     /**
@@ -54,7 +56,7 @@ public class Engine {
     	System.out.println(command);
 
         // Attach IO to process
-        IOPlayer player = new IOPlayer(process, idString);
+        IOPlayerable player = new IOPlayer(process, idString);
         
         // Add player
         this.players.add(player);
@@ -82,10 +84,10 @@ public class Engine {
     /**
      * @return : A list of all the players in this game
      */
-    public ArrayList<IOPlayer> getPlayers() {
+    public ArrayList<IOPlayerable> getPlayers() {
     	return this.players;
     }
-    
+
     /**
      * Starts the game
      */
@@ -101,7 +103,7 @@ public class Engine {
 
         // Keep running
         while (this.isRunning) {
-        	
+
         	round++;
 
             // Play a round

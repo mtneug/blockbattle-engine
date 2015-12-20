@@ -35,12 +35,12 @@ import java.io.InputStreamReader;
 public class InputStreamGobbler extends Thread {
 	
 	private InputStream inputStream;
-	private IOPlayer player;
+	private IOPlayerable player;
 	private String type;
 	private StringBuffer buffer;
 	private boolean finished;
 
-	InputStreamGobbler(InputStream inputStream, IOPlayer player, String type) {
+	InputStreamGobbler(InputStream inputStream, IOPlayerable player, String type) {
         this.inputStream = inputStream;
         this.player = player;
         this.type = type;
@@ -61,7 +61,7 @@ public class InputStreamGobbler extends Thread {
             while (!finished && (lastLine = bufferedReader.readLine()) != null) {
                 if (!lastLine.contains("VM warning") && buffer.length() < 1000000) { //catches bots that return way too much (infinite loop)
                     if (this.type.equals("output"))
-                	   this.player.response = lastLine;
+                      this.player.setResponse(lastLine);
                     buffer.append(lastLine + "\n");
                 }
             }

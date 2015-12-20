@@ -23,7 +23,7 @@ import java.util.List;
 
 import com.theaigames.engine.Engine;
 import com.theaigames.engine.Logic;
-import com.theaigames.engine.io.IOPlayer;
+import com.theaigames.engine.io.IOPlayerable;
 
 /**
  * abstract class AbstractGame
@@ -126,7 +126,7 @@ public abstract class AbstractGame implements Logic {
 	@Override
     public void playRound(int roundNumber) 
 	{
-		for(IOPlayer ioPlayer : this.engine.getPlayers())
+		for(IOPlayerable ioPlayer : this.engine.getPlayers())
 			ioPlayer.addToDump(String.format("Round %d", roundNumber));
 		
 		this.processor.playRound(roundNumber);
@@ -139,7 +139,7 @@ public abstract class AbstractGame implements Logic {
 	public void finish() throws Exception
 	{
 		// stop the bots
-		for(IOPlayer ioPlayer : this.engine.getPlayers())
+		for(IOPlayerable ioPlayer : this.engine.getPlayers())
 			ioPlayer.finish();
 		Thread.sleep(100);
 		

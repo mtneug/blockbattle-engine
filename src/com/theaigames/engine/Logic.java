@@ -17,7 +17,7 @@
 
 package com.theaigames.engine;
 
-import com.theaigames.engine.io.IOPlayer;
+import com.theaigames.engine.io.IOPlayerable;
 import com.theaigames.game.player.AbstractPlayer;
 
 import java.util.ArrayList;
@@ -32,7 +32,7 @@ import java.util.ArrayList;
  * @author Jackie Xu <jackie@starapple.nl>, Jim van Eeden <jim@starapple.nl>
  */
 public interface Logic {
-    public void setupGame(ArrayList<IOPlayer> players) throws Exception; // create the players, set up the game
+    public void setupGame(ArrayList<IOPlayerable> players) throws Exception; // create the players, set up the game
     public void playRound(int roundNumber); // play a round
     public void sendSettings(AbstractPlayer player); // send the game settings to given player
     public boolean isGameOver(); // check if the game is over
