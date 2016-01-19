@@ -1,8 +1,15 @@
 package com.theaigames.engine.io;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.PipedInputStream;
+import java.io.PipedOutputStream;
+import java.io.PrintStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+
+import com.theaigames.blockbattle.Parameters;
+import com.theaigames.blockbattle.ThreadedBlockbattle;
 
 /**
  * Implementation of an IO Player which uses threads instead of processes.
@@ -16,7 +23,7 @@ public class ThreadedIOPlayer implements IOPlayerable {
   private Thread thread = new Thread();
   private OutputStreamWriter inputStream;
   private InputStreamGobbler outputGobbler;
-  //private InputStreamGobbler errorGobbler;
+  // private InputStreamGobbler errorGobbler;
   private String idString;
   private StringBuilder dump = new StringBuilder();
   private int errorCounter = 0;
@@ -31,9 +38,9 @@ public class ThreadedIOPlayer implements IOPlayerable {
     this.outputGobbler = new InputStreamGobbler(outIs, this, "output");
 
     // Connect error stream
-    //PipedOutputStream errOs = new PipedOutputStream();
-    //PipedInputStream errIs = new PipedInputStream(errOs);
-    //this.errorGobbler = new InputStreamGobbler(errIs, this, "error");
+    // PipedOutputStream errOs = new PipedOutputStream();
+    // PipedInputStream errIs = new PipedInputStream(errOs);
+    // this.errorGobbler = new InputStreamGobbler(errIs, this, "error");
 
     // Connect input stream
     PipedOutputStream inOs = new PipedOutputStream();
@@ -44,12 +51,23 @@ public class ThreadedIOPlayer implements IOPlayerable {
     Runnable r = () -> {
       // Set streams as std
       ThreadedPrintStream.setThreadLocalSystemOut(new PrintStream(outOs));
-      //ThreadedPrintStream.setThreadLocalSystemErr(new PrintStream(errOs));
+      // ThreadedPrintStream.setThreadLocalSystemErr(new PrintStream(errOs));
       ThreadedInputStream.setThreadLocalSystemIn(inIs);
 
       // Run Bot
       try {
-        mainMethod.invoke(null, (Object) new String[0]);
+        if (ThreadedBlockbattle.parameters != null) {
+          Parameters par = ThreadedBlockbattle.parameters;
+          String b = String.valueOf(par.getBumpinessWeight());
+          String c = String.valueOf(par.getCompletenessWeight());
+          String h = String.valueOf(par.getHeightWeight());
+          String o = String.valueOf(par.getHolesWeight());
+          String[] args = {"-b", b, "-c", c, "-h", h, "-o", o};
+          mainMethod.invoke(null, (Object) args);
+        } else {
+          String[] args = {};
+          mainMethod.invoke(null, (Object) args);
+        }
       } catch (InvocationTargetException e) {
         // Don't blow up when the thread was killed
         if (!(finished && e.getTargetException() instanceof ThreadDeath))
@@ -60,7 +78,7 @@ public class ThreadedIOPlayer implements IOPlayerable {
 
       try {
         outOs.close();
-        //errOs.close();
+        // errOs.close();
         inIs.close();
       } catch (Exception e) {
       }
@@ -76,7 +94,8 @@ public class ThreadedIOPlayer implements IOPlayerable {
    * @throws IOException
    */
   public void writeToBot(String line) throws IOException {
-    if (finished) return;
+    if (finished)
+      return;
     try {
       inputStream.write(line + "\n");
       inputStream.flush();
@@ -98,7 +117,8 @@ public class ThreadedIOPlayer implements IOPlayerable {
     String response;
 
     if (errorCounter > MAX_ERRORS) {
-      addToDump(String.format("Maximum number (%d) of time-outs reached: skipping all moves.", MAX_ERRORS));
+      addToDump(String.format("Maximum number (%d) of time-outs reached: skipping all moves.",
+          MAX_ERRORS));
       return "";
     }
 
@@ -107,7 +127,9 @@ public class ThreadedIOPlayer implements IOPlayerable {
       long timeElapsed = timeNow - timeStart;
 
       if (timeElapsed >= timeOut) {
-        addToDump(String.format("Response timed out (%dms), let your bot return '%s' instead of nothing or make it faster.", timeOut, NULL_MOVE));
+        addToDump(String.format(
+            "Response timed out (%dms), let your bot return '%s' instead of nothing or make it faster.",
+            timeOut, NULL_MOVE));
         errorCounter++;
         if (errorCounter > MAX_ERRORS)
           finish();
@@ -138,7 +160,8 @@ public class ThreadedIOPlayer implements IOPlayerable {
    * Ends the bot process and it's communication
    */
   public void finish() {
-    if (finished) return;
+    if (finished)
+      return;
 
     finished = true;
 
@@ -152,7 +175,7 @@ public class ThreadedIOPlayer implements IOPlayerable {
     } catch (IOException e) {
     }
     outputGobbler.finish();
-    //errorGobbler.finish();
+    // errorGobbler.finish();
   }
 
   /**
@@ -192,7 +215,7 @@ public class ThreadedIOPlayer implements IOPlayerable {
    */
   public String getStderr() {
     return null;
-    //return errorGobbler.getData();
+    // return errorGobbler.getData();
   }
 
   /**
@@ -208,7 +231,7 @@ public class ThreadedIOPlayer implements IOPlayerable {
    */
   public void run() {
     outputGobbler.start();
-    //errorGobbler.start();
+    // errorGobbler.start();
     thread.start();
   }
 
