@@ -1,10 +1,10 @@
 package com.theaigames.engine;
 
-import com.theaigames.engine.io.ThreadedIOPlayer;
-import com.theaigames.engine.io.IOPlayerable;
-
 import java.io.IOException;
 import java.lang.reflect.Method;
+
+import com.theaigames.engine.io.IOPlayerable;
+import com.theaigames.engine.io.ThreadedIOPlayer;
 
 /**
  * @author Matthias Neugebauer

@@ -1,19 +1,20 @@
 package com.theaigames.blockbattle;
 
-import com.theaigames.engine.ThreadedEngine;
-import com.theaigames.engine.io.IOPlayerable;
-import com.theaigames.engine.io.ThreadedInputStream;
-import com.theaigames.engine.io.ThreadedPrintStream;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.theaigames.engine.ThreadedEngine;
+import com.theaigames.engine.io.IOPlayerable;
+import com.theaigames.engine.io.ThreadedIOPlayer;
+import com.theaigames.engine.io.ThreadedInputStream;
+import com.theaigames.engine.io.ThreadedPrintStream;
+import com.theaigames.game.player.AbstractPlayer;
 
 /**
  * @author Matthias Neugebauer
  */
 public class ThreadedBlockbattle extends Blockbattle {
-  public static Parameters parameters; //TODO refactor global parameters variable
 
   /**
    * Partially sets up the engine
@@ -62,6 +63,7 @@ public class ThreadedBlockbattle extends Blockbattle {
     // add the players
     for (int i = 0; i < botIds.size(); i++)
       this.engine.addPlayer(botDirs.get(i), botIds.get(i));
+    
   }
 
   @Override
@@ -81,7 +83,7 @@ public class ThreadedBlockbattle extends Blockbattle {
       }
     }
 
-    System.out.println("Done.");
+    System.out.println("Done after "+ processor.getRoundNumber() + " rounds!");
 
   }
 
@@ -97,5 +99,37 @@ public class ThreadedBlockbattle extends Blockbattle {
 
     game.setupEngine(args);
     game.runEngine();
+    
+  }
+  
+  public static int runWithParameters(Parameters bot1, Parameters bot2) throws Exception
+  {
+    String[] args = {"de.unimuenster.wi.wwunderbot.Main", "de.unimuenster.wi.wwunderbot.Main"};
+    ThreadedPrintStream.replaceSystemOutAndErr();
+    ThreadedInputStream.replaceSystemIn();
+    ThreadedBlockbattle game = new ThreadedBlockbattle();
+
+    
+    game.setupEngine(args);
+    
+    List<IOPlayerable> players = game.engine.getPlayers();
+    
+    // Hack parameters into the bots (quick and dirty)
+    if(players.get(0) instanceof ThreadedIOPlayer)
+      ((ThreadedIOPlayer) players.get(0)).parameters = bot1;
+    
+    if(players.get(1) instanceof ThreadedIOPlayer)
+      ((ThreadedIOPlayer) players.get(1)).parameters = bot2;
+    
+    
+    game.runEngine();
+        
+    AbstractPlayer winner = game.processor.getWinner();
+    
+    if (winner == null) return 0;
+    if (winner.getName().equals("player1")) return 1;
+    return 2;
+    
+    
   }
 }

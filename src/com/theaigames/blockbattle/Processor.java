@@ -71,7 +71,7 @@ public class Processor implements GameHandler {
 	@Override
 	public void playRound(int roundNumber) {
 		
-		System.out.println("playing round " + roundNumber);
+		// System.out.println("playing round " + roundNumber);
 		
 		this.roundNumber = roundNumber;
 		ShapeType nextShape = this.nextShape;

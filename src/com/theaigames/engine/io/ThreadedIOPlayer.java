@@ -28,10 +28,12 @@ public class ThreadedIOPlayer implements IOPlayerable {
   private StringBuilder dump = new StringBuilder();
   private int errorCounter = 0;
   private boolean finished = false;
+  public Parameters parameters;
 
   public ThreadedIOPlayer(Method mainMethod, String idString) throws IOException {
     this.idString = idString;
-
+    
+    
     // Connect output stream
     PipedOutputStream outOs = new PipedOutputStream();
     PipedInputStream outIs = new PipedInputStream(outOs);
@@ -56,12 +58,11 @@ public class ThreadedIOPlayer implements IOPlayerable {
 
       // Run Bot
       try {
-        if (ThreadedBlockbattle.parameters != null) {
-          Parameters par = ThreadedBlockbattle.parameters;
-          String b = String.valueOf(par.getBumpinessWeight());
-          String c = String.valueOf(par.getCompletenessWeight());
-          String h = String.valueOf(par.getHeightWeight());
-          String o = String.valueOf(par.getHolesWeight());
+        if (parameters != null) {
+          String b = String.valueOf(parameters.getBumpinessWeight());
+          String c = String.valueOf(parameters.getCompletenessWeight());
+          String h = String.valueOf(parameters.getHeightWeight());
+          String o = String.valueOf(parameters.getHolesWeight());
           String[] args = {"-b", b, "-c", c, "-h", h, "-o", o};
           mainMethod.invoke(null, (Object) args);
         } else {
